@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Enquiry Received | Design Directive</title>
+<meta name="description" content="Your project enquiry has been received by Design Directive." />
+<meta name="robots" content="noindex, follow" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="dd-root">
+  <!-- Custom cursor (fixed position, sits outside the grid flow).
+       Hidden by default; main.js only reveals it on fine-pointer
+       devices by putting .dd-cursor-on on <html>. -->
+  <div class="dd-cursor" id="dd-cursor" aria-hidden="true">
+    <div class="dd-cursor__ring">
+      <span class="dd-cursor__shape"></span>
+    </div>
+    <div class="dd-cursor__dot"></div>
+  </div>
+
+  <div class="eyebrow-bar">
+    <span></span>
+    <span>London — International</span>
+  </div>
+
+<!-- The page Netlify Forms redirects to on successful submission (see
+     the form's `action` in /start-a-project/). Same .dd-project shell,
+     single centred message, same as every other simple sub-page. -->
+<main class="dd-project">
+  <header class="dd-project__nav">
+    <a href="/" class="dd-logo">DESIGN&nbsp;DIRECTIVE</a>
+    <a href="mailto:avmdesignsltd@gmail.com" data-track="email-contact">avmdesignsltd@gmail.com</a>
+  </header>
+
+  <section class="dd-project__body dd-fade" data-fade data-conversion="project-enquiry">
+    <span class="dd-project__eyebrow">Thank You</span>
+    <h1 class="dd-project__title">Thank you.</h1>
+    <p class="dd-project__note">We've received your project enquiry and will review the information you've sent.</p>
+    <p class="dd-project__note">If the project looks like a good fit, we'll come back to you by email.</p>
+  </section>
+
+  <footer class="dd-project__foot dd-fade" data-fade>
+    <a href="/">← Back to Design Directive</a>
+    <a href="mailto:avmdesignsltd@gmail.com" data-track="email-contact">avmdesignsltd@gmail.com</a>
+  </footer>
+</main>
+<script src="/main.js" defer></script>
+</body>
+</html>

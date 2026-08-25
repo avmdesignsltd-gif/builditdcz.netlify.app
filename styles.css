@@ -1,0 +1,875 @@
+/* ==========================================================================
+   Design Directive — one shared stylesheet for the whole site
+   (landing page + start-a-project + thank-you + any future page)
+
+   Design tokens, type scale and hairline/no-radius language: Inter
+   throughout, weight and size carry the hierarchy, ink/paper/panel/grey/line
+   and nothing else — no accent colour is introduced, on purpose.
+
+   The landing page is a single locked 100vh screen (wheel-driven panning,
+   no real document scroll); every other page scrolls normally. That one
+   structural difference is scoped to html.dd-home below rather than left
+   as a global html/body rule, so it can't leak onto the other pages.
+   ========================================================================== */
+
+:root{
+  --ink:#0A0A0A;
+  --paper:#FFFFFF;
+  --panel:#F2F1EE;
+  --grey:#6B6B68;
+  --line: rgba(10,10,10,0.14);
+  --split: 36.5%; /* landing page's hero column split, reused by its split-bar */
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html, body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter', sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+body.dd-root{ min-height:100vh; display:flex; flex-direction:column; }
+
+/* Landing page only: locks to exactly one screen, no real scroll —
+   everything else on the site scrolls normally. dd-fixed opts a
+   sub-page (e.g. Start a Project) into the same locked-screen behaviour. */
+html.dd-home, html.dd-home body,
+html.dd-fixed, html.dd-fixed body{ height:100%; overflow:hidden; }
+
+a{ color:inherit; text-decoration:none; }
+::selection{ background:var(--ink); color:var(--paper); }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+}
+
+/* Underline-on-hover, shared by every inline text link on these pages —
+   the same treatment as the primary nav on the landing page, so the two
+   feel like one site rather than a homepage plus generic sub-pages. */
+.dd-hoverline{ position:relative; padding-bottom:2px; }
+.dd-hoverline::after{
+  content:''; position:absolute; left:0; bottom:0; width:0; height:1px;
+  background:var(--ink); transition:width 0.25s ease;
+}
+.dd-hoverline:hover::after, .dd-hoverline:focus-visible::after{ width:100%; }
+
+:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+
+
+/* ---------- Fade-up reveal (data-fade), driven by main.js ---------- */
+.dd-fade{
+  opacity:0; transform:translateY(16px);
+  transition:opacity 0.6s ease, transform 0.6s cubic-bezier(.22,.75,.2,1);
+}
+.dd-fade.is-visible{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: reduce){
+  .dd-fade{ opacity:1; transform:none; transition:none; }
+}
+
+
+/* ---------- Custom cursor ----------
+   Off by default; main.js adds .dd-cursor-on to <html> only on fine-pointer
+   (mouse/trackpad) devices, so touch never sees it. A small dot tracks the
+   pointer exactly; a looser ring trails it and swells to signal
+   "clickable" the same way d-row hover states do on the landing page. */
+.dd-cursor{ display:none; }
+html.dd-cursor-on .dd-cursor{
+  display:block; position:fixed; top:0; left:0; z-index:999;
+  pointer-events:none; will-change:transform;
+  transition:opacity 0.15s ease;
+}
+html.dd-cursor-on{ cursor:none; }
+html.dd-cursor-on a, html.dd-cursor-on button,
+html.dd-cursor-on input, html.dd-cursor-on select,
+html.dd-cursor-on textarea, html.dd-cursor-on label{ cursor:none; }
+
+.dd-cursor__dot{
+  position:absolute; top:0; left:0; width:4px; height:4px;
+  margin:-2px 0 0 -2px; background:var(--ink); border-radius:50%;
+}
+.dd-cursor__ring{
+  position:absolute; top:0; left:0; width:28px; height:28px;
+  margin:-14px 0 0 -14px; border:1px solid var(--ink); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform 0.18s ease, opacity 0.18s ease, border-color 0.18s ease;
+}
+.dd-cursor__shape{
+  font-size:11px; line-height:1; opacity:0; transform:scale(0.6);
+  transition:opacity 0.18s ease, transform 0.18s ease;
+}
+html.dd-cursor-hover .dd-cursor__ring{ transform:scale(1.7); background:var(--ink); }
+html.dd-cursor-hover .dd-cursor__shape{ opacity:1; transform:scale(1); color:var(--paper); }
+html.dd-cursor-hover .dd-cursor__shape::before{ content:'↗'; }
+html.dd-cursor-down .dd-cursor__ring{ transform:scale(1.3); }
+
+
+/* ==========================================================================
+   Shell — nav / body / foot, shared by every .dd-project page
+   ========================================================================== */
+
+.dd-project{ flex:1; display:flex; flex-direction:column; min-height:100vh; }
+
+.dd-project__nav{
+  flex:0 0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 2vw; height:7vh; min-height:56px;
+  background:var(--panel);
+  border-bottom:1px solid var(--line);
+  position:sticky; top:3.6vh; z-index:100;
+}
+.dd-logo{
+  font-size:clamp(14px, 1.1vw, 18px); font-weight:800;
+  letter-spacing:0.01em; text-transform:uppercase;
+}
+.dd-project__nav a[href^="mailto:"]{
+  font-size:clamp(10px, 0.78vw, 13px); font-weight:700;
+  letter-spacing:0.02em; text-transform:uppercase;
+  position:relative; padding-bottom:2px;
+}
+.dd-project__nav a[href^="mailto:"]::after{
+  content:''; position:absolute; left:0; bottom:-2px; width:0; height:1px;
+  background:var(--ink); transition:width 0.25s ease;
+}
+.dd-project__nav a[href^="mailto:"]:hover::after,
+.dd-project__nav a[href^="mailto:"]:focus-visible::after{ width:100%; }
+
+.dd-project__foot{
+  flex:0 0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:2.4vh 2vw; gap:2vw;
+  border-top:1px solid var(--line);
+  background:var(--paper);
+  font-size:clamp(10px, 0.78vw, 13px); font-weight:700;
+  letter-spacing:0.02em; text-transform:uppercase;
+}
+.dd-project__foot a{ position:relative; padding-bottom:2px; }
+.dd-project__foot a::after{
+  content:''; position:absolute; left:0; bottom:-2px; width:0; height:1px;
+  background:var(--ink); transition:width 0.25s ease;
+}
+.dd-project__foot a:hover::after, .dd-project__foot a:focus-visible::after{ width:100%; }
+
+.dd-project__eyebrow{
+  display:block;
+  font-size:clamp(10px, 0.8vw, 13px); font-weight:600; letter-spacing:0.05em;
+  text-transform:uppercase; color:var(--grey); margin-bottom:1.8vh;
+}
+.dd-project__title{
+  font-size:clamp(28px, 3.6vw, 52px); font-weight:800; line-height:1.08;
+  letter-spacing:-0.01em; max-width:16ch;
+}
+.dd-project__note{
+  margin-top:1.6vh;
+  font-size:clamp(13px, 1vw, 16px); line-height:1.6; color:var(--ink);
+  max-width:56ch;
+}
+.dd-project__note + .dd-project__note{ margin-top:0.9em; }
+
+
+/* Simple top-anchored body — used by the thank-you page. Matches the
+   top-anchored rhythm of every other section on the site rather than
+   centering, which left a large empty gap above short messages. */
+.dd-project__body{
+  flex:1; display:flex; flex-direction:column; align-items:flex-start;
+  padding:8vh 2vw; max-width:760px;
+}
+
+
+/* ==========================================================================
+   Service / form body — bordered stack of sections, reused by
+   start-a-project and any similar sub-page
+   ========================================================================== */
+
+.dd-service__body{ flex:1; }
+
+.dd-service__section{
+  padding:5vh 2vw; border-bottom:1px solid var(--line);
+}
+.dd-service__section:last-child{ border-bottom:none; }
+
+.dd-service__section > *{ max-width:640px; margin-left:auto; margin-right:auto; }
+
+.dd-service__title{
+  font-size:clamp(24px, 3vw, 40px); font-weight:800; line-height:1.15;
+  letter-spacing:-0.01em; max-width:20ch;
+  margin-top:1.2vh;
+}
+
+.dd-service__section--cta{
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:1vh;
+  background:var(--panel);
+}
+.dd-service__cta-link{
+  font-size:clamp(16px, 1.6vw, 24px); font-weight:800; letter-spacing:-0.005em;
+  position:relative; padding-bottom:3px;
+}
+.dd-service__cta-link::after{
+  content:''; position:absolute; left:0; bottom:0; width:0; height:2px;
+  background:var(--ink); transition:width 0.25s ease;
+}
+.dd-service__cta-link:hover::after, .dd-service__cta-link:focus-visible::after{ width:100%; }
+
+
+/* ==========================================================================
+   Form
+   ========================================================================== */
+
+.dd-form{ display:flex; flex-direction:column; gap:3.2vh; margin-top:1vh; }
+
+/* Netlify's spam trap — present in the DOM for bots, invisible to people. */
+.dd-form__honeypot{
+  position:absolute; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); white-space:nowrap;
+}
+
+.dd-form__row{ display:flex; flex-direction:column; gap:0.7em; }
+
+.dd-form__label{
+  font-size:clamp(10px, 0.8vw, 13px); font-weight:700; letter-spacing:0.04em;
+  text-transform:uppercase; color:var(--ink);
+}
+.dd-form__required{ color:var(--ink); font-weight:800; }
+
+.dd-form__helper{
+  font-size:clamp(11px, 0.85vw, 13px); color:var(--grey); line-height:1.5;
+  margin-top:-0.3em;
+}
+
+/* Underline-only fields — no boxes, no rounded corners, matching the
+   hairline-rule language used everywhere else on the site. */
+.dd-form__input,
+.dd-form__select,
+.dd-form__textarea{
+  width:100%;
+  font-family:inherit; font-size:clamp(14px, 1vw, 16px); font-weight:500;
+  color:var(--ink); background:transparent;
+  border:none; border-bottom:1px solid var(--line);
+  border-radius:0;
+  padding:0.7em 0.1em;
+  transition:border-color 0.2s ease;
+}
+.dd-form__input::placeholder,
+.dd-form__textarea::placeholder{ color:var(--grey); opacity:1; }
+.dd-form__input:focus,
+.dd-form__select:focus,
+.dd-form__textarea:focus{ border-bottom:1px solid var(--line); }
+
+/* The sitewide focus ring (2px solid ink, offset 3px) is right for buttons
+   and links, but over an underline-only field it reads as a heavy double
+   box. These fields already show focus via their own border-bottom above,
+   so give them a much lighter, thinner outline instead. */
+.dd-form__input:focus-visible,
+.dd-form__select:focus-visible,
+.dd-form__textarea:focus-visible{
+  outline:1px solid var(--line);
+  outline-offset:2px;
+}
+
+.dd-form__select{
+  appearance:none; -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%230A0A0A' stroke-width='1.4'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 0.2em center; background-size:11px 8px;
+  padding-right:1.6em;
+}
+
+.dd-form__textarea{ resize:vertical; min-height:9em; line-height:1.55; }
+
+/* Checkbox group — deliberately echoes the directive-list rows on the
+   landing page: bordered stack, hover/checked states lift the same way
+   d-row does, so choosing services reads as part of the same system. */
+.dd-form__fieldset{ border:none; }
+.dd-form__checkbox-group{
+  border-top:1px solid var(--line);
+}
+.dd-form__checkbox{
+  display:flex; align-items:flex-start; gap:0.9em;
+  padding:1em 0.2em;
+  border-bottom:1px solid var(--line);
+  cursor:pointer;
+  transition:background 0.15s ease;
+}
+.dd-form__checkbox:hover{ background:var(--panel); }
+.dd-form__checkbox input[type="checkbox"]{
+  appearance:none; -webkit-appearance:none;
+  width:16px; height:16px; margin-top:0.15em; flex:0 0 auto;
+  border:1px solid var(--ink); border-radius:0; background:var(--paper);
+  position:relative; cursor:pointer;
+}
+.dd-form__checkbox input[type="checkbox"]:checked{ background:var(--ink); }
+.dd-form__checkbox input[type="checkbox"]:checked::after{
+  content:''; position:absolute; left:4px; top:1px; width:5px; height:9px;
+  border:solid var(--paper); border-width:0 2px 2px 0; transform:rotate(45deg);
+}
+.dd-form__checkbox-text{ display:flex; flex-direction:column; gap:0.25em; }
+.dd-form__checkbox-name{ font-size:clamp(13px, 0.95vw, 15px); font-weight:700; }
+.dd-form__checkbox-desc{ font-size:clamp(11px, 0.82vw, 13px); color:var(--grey); line-height:1.45; }
+
+.dd-form__row--submit{ margin-top:1vh; }
+.dd-form__submit{
+  display:inline-flex; align-items:center; gap:0.6em;
+  font-family:inherit; font-size:clamp(11px, 0.85vw, 13px); font-weight:700;
+  letter-spacing:0.06em; text-transform:uppercase;
+  background:var(--ink); color:var(--paper);
+  border:1px solid var(--ink); border-radius:0;
+  padding:1.1em 1.6em;
+  cursor:pointer;
+  transition:background 0.2s ease, color 0.2s ease;
+}
+.dd-form__submit:hover{ background:var(--paper); color:var(--ink); }
+.dd-form__submit span{ transition:transform 0.2s ease; }
+.dd-form__submit:hover span{ transform:translate(2px,-2px); }
+
+
+/* ---------- Mobile ---------- */
+@media (max-width:760px){
+  .dd-project__nav{ padding:0 20px; height:auto; min-height:0; padding-top:16px; padding-bottom:16px; }
+  .dd-project__body{ padding:40px 20px; }
+  .dd-service__section{ padding:36px 20px; }
+  .dd-project__title{ font-size:30px; }
+  .dd-service__title{ font-size:26px; }
+  .dd-project__foot{ flex-direction:column; align-items:flex-start; gap:10px; padding:20px; }
+}
+
+
+
+/* ==========================================================================
+   LANDING PAGE — everything below is specific to the home page
+   (.page / .hero / .directive-list / .trend-intro / the hamburger menu, etc.)
+   ========================================================================== */
+
+  /* Reference frame: MacBook 14" viewport = 1512 x 982.
+     Everything below is sized in vh/vw so the page scales to fill
+     exactly one screen at any window size. */
+
+  .page{ height:100vh; display:flex; flex-direction:column; }
+
+  .eyebrow-bar{
+    background:var(--ink); color:var(--paper);
+    flex:0 0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 2vw; height:3.6vh;
+    font-size:clamp(9px, 0.75vw, 12px);
+    font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
+    position:sticky; top:0; z-index:110;
+  }
+
+  header{
+    flex:0 0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 2vw; height:7vh;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{ font-size:clamp(14px, 1.1vw, 18px); font-weight:800; letter-spacing:0.01em; text-transform:uppercase; font-family:inherit; color:inherit; background:none; border:none; padding:0; margin:0; cursor:pointer; }
+  nav ul{ display:flex; gap:2.2vw; list-style:none; font-size:clamp(10px, 0.78vw, 13px); font-weight:700; letter-spacing:0.02em; text-transform:uppercase; }
+  nav a{ position:relative; padding-bottom:2px; }
+  nav a::after{ content:''; position:absolute; left:0; bottom:-2px; width:0; height:1px; background:var(--ink); transition:width 0.25s ease; }
+  nav a:hover::after, nav a:focus-visible::after{ width:100%; }
+  nav a:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+
+  /* Hamburger menu, replacing the WHO / WHAT / WHERE / CONTACT row.
+     Its left edge is aligned (via JS, see bottom script) to the left
+     edge of the "London — International" label in the eyebrow bar. */
+  .nav-toggle{
+    display:flex; flex-direction:column; justify-content:center; gap:5px;
+    width:22px; height:16px; background:none; border:none; padding:0; cursor:pointer;
+  }
+  .nav-toggle span{ display:block; height:2px; width:100%; background:var(--ink); transition:transform 0.2s ease, opacity 0.2s ease; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+  .nav-menu{
+    position:fixed; top:calc(3.6vh + 7vh);
+    background:var(--paper); border:1px solid var(--line);
+    min-width:180px; z-index:60;
+    transform:translateY(-8px); opacity:0; pointer-events:none;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .nav-menu.open{ opacity:1; transform:translateY(0); pointer-events:auto; }
+  .nav-menu ul{ display:flex; flex-direction:column; list-style:none; }
+  .nav-menu a{ display:block; padding:0.9em 1.2em; font-size:clamp(10px, 0.78vw, 13px); font-weight:700; letter-spacing:0.02em; text-transform:uppercase; border-bottom:1px solid var(--line); }
+  .nav-menu li:last-child a{ border-bottom:none; }
+  .nav-menu a:hover{ background:var(--panel); }
+
+  .hero{
+    flex:1 1 auto; min-height:0;
+    display:grid;
+    grid-template-columns: var(--split) 1fr;
+  }
+
+  .hero-copy{
+    background:var(--paper);
+    padding:3vh 2vw 2.4vh;
+    display:flex; flex-direction:column;
+    min-height:0;
+  }
+  .hero-eyebrow{
+    font-size:clamp(10px, 0.8vw, 13px); font-weight:600; letter-spacing:0.05em;
+    text-transform:uppercase; color:var(--grey); margin-bottom:1.8vh;
+  }
+  h1{
+    font-size:clamp(24px, 2.55vw, 40px); font-weight:800; line-height:1.1;
+    letter-spacing:-0.01em; max-width:22ch;
+  }
+  .hero-desc{
+    margin-top:3.4vh;
+    font-size:clamp(12px, 0.92vw, 15px);
+    line-height:1.5;
+    max-width:none;
+    color:var(--ink);
+  }
+  .hero-copy .filler{ flex:1; min-height:1vh; }
+
+  .directive-list{
+    flex:1; min-height:0; /* fills whatever space is actually available, rather than a guessed height */
+    margin:4vh -2vw 0; /* top gap below the headline; sides bleed to the true edges */
+    overflow-y:auto;
+    border-top:1px solid var(--line);
+    scrollbar-width:none; -ms-overflow-style:none;
+  }
+  .directive-list::-webkit-scrollbar{ display:none; width:0; height:0; }
+  .d-row{
+    display:flex; align-items:center; gap:1.2vw;
+    height:var(--d-row-h, 9.5vh); /* set by JS to exactly 1/5 of the list's real height */
+    padding:0 2vw; /* restores the same text inset as the rest of the column */
+    border-bottom:1px solid var(--line); /* spans the row's full bled width */
+    box-sizing:border-box;
+    transition:background 0.15s ease;
+  }
+  .d-row:hover{ background:var(--panel); }
+  .d-num{
+    font-family:'Courier New', monospace;
+    font-size:clamp(11px, 0.85vw, 14px);
+    color:var(--grey);
+    flex:0 0 auto; min-width:2.2ch;
+  }
+  .d-title{
+    font-size:clamp(15px, 1.3vw, 20px);
+    font-weight:700; color:var(--ink);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+
+  .hero-cta{
+    /* cancel hero-copy's own padding so this bleeds to the column's true edges */
+    display:block;
+    margin:0 -2vw -2.4vh -2vw;
+    background:var(--panel);
+    color:var(--ink);
+    padding:2.6vh 2vw 2.8vh;
+    transition:background 0.2s ease;
+  }
+  .hero-cta:hover{ background:var(--line); }
+  .hero-cta .cta-label{
+    font-size:clamp(9px, 0.7vw, 11.5px);
+    font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--grey);
+    margin-bottom:1.2vh;
+  }
+  .hero-cta .cta-heading{
+    font-size:clamp(15px, 1.35vw, 21px);
+    font-weight:800; line-height:1.25; letter-spacing:-0.005em;
+    color:var(--ink);
+    max-width:26ch;
+  }
+
+  .who-taught{
+    display:flex; align-items:center; gap:0.7vw;
+    font-size:clamp(8.5px, 0.62vw, 10.5px);
+    font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--ink);
+  }
+  .who-taught svg{ width:2vh; height:2vh; stroke:var(--ink); fill:none; stroke-width:1.4; flex:0 0 auto; }
+
+  .hero-media{
+    position:relative;
+    background:var(--panel);
+    border-left:1px solid var(--line);
+    overflow:hidden; min-height:0;
+  }
+  .cover-track{
+    position:absolute; top:0; left:0; height:100%;
+    display:flex; align-items:stretch;
+    will-change:transform;
+  }
+  .cover-track img{
+    height:100%; width:auto; display:block;
+    flex:0 0 auto;
+    -webkit-user-drag:none; user-select:none;
+  }
+  .specimen{
+    position:absolute; right:1.1vw; top:50%;
+    transform:translateY(-50%) rotate(90deg);
+    transform-origin:center;
+    display:flex; align-items:baseline; gap:0.5vh;
+    white-space:nowrap;
+  }
+  .specimen .label{
+    font-size:clamp(7.5px, 0.5vw, 9.5px); font-weight:700; letter-spacing:0.16em;
+    color:rgba(255,255,255,0.75); text-transform:uppercase;
+  }
+  .specimen .num{
+    font-size:clamp(15px, 1.35vw, 22px); font-weight:800; color:#fff;
+  }
+  .specimen .frac{
+    font-size:clamp(9px, 0.6vw, 11px); font-weight:600; color:rgba(255,255,255,0.75);
+  }
+
+  .split-bar{
+    flex:0 0 auto; position:relative;
+    height:2.8vh;
+    background:var(--panel);
+    border-top:1px solid var(--line);
+    display:grid;
+    grid-template-columns: var(--split) 1fr;
+    align-items:center;
+  }
+  .split-bar::before{
+    content:''; position:absolute; left:var(--split); top:0; bottom:0;
+    width:1px; background:var(--line);
+  }
+  .split-bar .from{ padding:0 2vw; font-size:clamp(8px, 0.55vw, 10px); font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--grey); }
+  .split-bar .to{ padding:0 2vw; text-align:right; font-size:clamp(8px, 0.55vw, 10px); font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--grey); }
+
+  @media (max-width:760px){
+    html.dd-home, html.dd-home body,
+    html.dd-fixed, html.dd-fixed body{ overflow:auto; height:auto; }
+    .page{ height:auto; }
+    .hero{ grid-template-columns:1fr; }
+    .hero-media{ min-height:34vh; border-left:none; border-top:1px solid var(--line); }
+    .hero-copy{ padding:24px 20px 20px; }
+    .hero-cta{ margin:0 -20px -20px -20px; }
+    h1{ font-size:28px; max-width:14ch; }
+    .hero-desc{ max-width:none; }
+    nav ul{ display:none; }
+    .split-bar{ grid-template-columns:1fr 1fr; height:auto; padding:8px 0; }
+    .split-bar::before{ display:none; }
+    .from, .to{ padding:4px 20px !important; }
+    .directive-list{ flex:none; height:auto; overflow:visible; margin:20px -20px 0; }
+    .d-row{ padding:14px 20px; }
+  }
+
+  /* Directive 01 — text intro / image transition */
+  .trend-intro{
+    position:absolute; inset:0; z-index:4;
+    background-color:var(--panel);
+    background-image: radial-gradient(rgba(10,10,10,0.12) 1px, transparent 1px);
+    background-size:32px 32px;
+    display:flex; align-items:center; overflow:hidden;
+    transform:translateY(-100%); opacity:0; pointer-events:none;
+    will-change:transform,opacity;
+  }
+  .trend-intro.is-opening{ animation:trendDrop .62s cubic-bezier(.22,.75,.2,1) forwards; }
+  @keyframes trendDrop{ to{ transform:translateY(0); opacity:1; } }
+  .trend-copy{
+    width:min(var(--trend-width, 46vw), 78%);
+    flex:0 0 auto;
+    max-height:100%;
+    overflow-y:auto;
+    margin-left:var(--trend-x, 4vw);
+    transform:translateY(var(--trend-y, 0px));
+    font-family:'Inter',sans-serif; color:var(--ink);
+  }
+
+  /* Directive 11's dedicated network visual — a sibling of .trend-copy,
+     empty and hidden for every other directive. */
+  .trend-visual{
+    flex:1; min-width:0; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:2vh 3vw;
+  }
+  .trend-kicker{font-size:clamp(10px,var(--trend-kicker,0.78vw),13px);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2vh;}
+  .trend-head{font-size:clamp(24px,var(--trend-head,2.55vw),40px);font-weight:800;line-height:1.1;letter-spacing:-.01em;max-width:22ch;margin-bottom:2.2vh;}
+  .trend-body{font-size:clamp(12px,var(--trend-body,1.18vw),19px);font-weight:400;line-height:1.55;max-width:48ch;}
+  .trend-body p + p{ margin-top:1em; }
+  .trend-body .trend-lede{
+    margin-top:1.8em; padding-top:1.4em; border-top:1px solid var(--line);
+    font-weight:700; color:var(--ink);
+  }
+  .trend-tags{ margin-top:2.4vh; font-size:clamp(10px,0.78vw,13px); font-weight:600; letter-spacing:.02em; color:var(--grey); max-width:48ch; }
+  .trend-copy [contenteditable=true]:focus{outline:1px solid var(--ink);outline-offset:4px;}
+
+  /* Directive 11 — Retail, Wholesale & Commercial Development.
+     Rich sub-sections injected into #trend-body alongside the intro
+     paragraphs, using the same tokens/hairline language as the rest of
+     the site. .trend-copy scrolls internally (see above) to fit it all
+     without changing the panel's width or the page's layout. */
+  .tw11-divider{ height:1px; background:var(--line); margin:3vh 0; max-width:48ch; }
+  .tw11-section-label{
+    display:block; font-size:clamp(10px,0.78vw,13px); font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--grey);
+    margin-bottom:1.4vh;
+  }
+
+  .tw11-partner{ display:flex; gap:1.4em; align-items:flex-start; }
+  .tw11-partner__portrait{
+    flex:0 0 auto; width:84px; height:84px; background:var(--panel);
+    border:1px solid var(--line);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  }
+  .tw11-partner__portrait svg{ width:32px; height:32px; opacity:.4; }
+  .tw11-partner__portrait span{ font-size:7px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--grey); text-align:center; }
+  .tw11-partner__text{ flex:1; min-width:0; padding-top:0.2em; }
+  .tw11-partner__text strong{ display:block; font-size:0.95em; font-weight:700; margin-bottom:0.6em; }
+  .tw11-partner__text p{ font-size:0.88em; line-height:1.55; color:var(--ink); }
+
+  .tw11-map{ max-width:48ch; }
+  .tw11-map svg{ width:100%; height:auto; display:block; }
+  .tw11-map text{ font-family:'Inter',sans-serif; font-size:8.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; fill:var(--grey); }
+  .tw11-map .tw11-node{ fill:var(--ink); }
+  .tw11-map .tw11-line{ stroke:var(--line); stroke-width:1; }
+
+  /* The orbital network diagram living in .trend-visual for directive 11. */
+  .tw11-network{ width:100%; max-width:420px; }
+  .tw11-network svg{ width:100%; height:auto; display:block; }
+  .tw11-network .tw11-orbit{ fill:none; stroke:var(--line); stroke-width:1; }
+  .tw11-network .tw11-node{ fill:var(--ink); }
+  .tw11-network .tw11-plane{ fill:var(--ink); }
+  .tw11-network text{
+    font-family:'Inter',sans-serif; font-size:8.5px; font-weight:700;
+    letter-spacing:.04em; text-transform:uppercase; fill:var(--grey);
+  }
+
+  .tw11-logos{ max-width:48ch; }
+  .tw11-logos__grid{
+    display:grid; grid-template-columns:repeat(5, 1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); margin-top:0.2em;
+  }
+  .tw11-logos__grid span{
+    display:flex; align-items:center; justify-content:center;
+    background:var(--paper); padding:1.5em 0.3em; text-align:center;
+    font-size:8px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--grey);
+  }
+
+  .tw11-chain{
+    display:flex; align-items:center; flex-wrap:wrap; gap:0.55em; max-width:48ch;
+    font-size:0.78em; font-weight:700; letter-spacing:.02em; text-transform:uppercase; color:var(--ink);
+  }
+  .tw11-chain__arrow{ color:var(--grey); font-weight:400; }
+
+  .tw11-cta{ max-width:48ch; }
+  .tw11-cta p{ margin-top:0.7em; font-size:0.9em; line-height:1.5; color:var(--ink); }
+  .tw11-cta__link{
+    display:inline-flex; align-items:center; gap:.5em; margin-top:1.6em;
+    font-weight:700; font-size:0.85em; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink); border-bottom:2px solid var(--ink); padding-bottom:2px;
+    transition:opacity 0.2s ease;
+  }
+  .tw11-cta__link:hover{ opacity:0.6; }
+
+  /* About panel ("Who?") — founder byline + disciplines list */
+  .tw-about-byline{ display:flex; align-items:center; gap:1em; margin-bottom:1.6em; }
+  .tw-about-photo{ width:64px; height:76px; object-fit:cover; border:1px solid var(--line); display:block; flex:0 0 auto; }
+  .tw-about-byline__text{ display:flex; flex-direction:column; gap:.3em; }
+  .tw-about-byline__text strong{ font-size:0.95em; font-weight:700; }
+  .tw-about-byline__text span{ font-size:0.78em; color:var(--grey); text-transform:uppercase; letter-spacing:.04em; font-weight:600; }
+
+  .tw-about-disciplines{ width:100%; max-width:280px; }
+  .tw-about-disciplines ul{ list-style:none; margin-top:1em; border-top:1px solid var(--line); }
+  .tw-about-disciplines li{
+    padding:0.9em 0; border-bottom:1px solid var(--line);
+    font-size:0.85em; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--ink);
+  }
+
+  @media (max-width:760px){
+    .tw11-logos__grid{ grid-template-columns:repeat(3, 1fr); }
+    .tw11-partner{ flex-direction:column; }
+    .trend-intro{ flex-direction:column; overflow-y:auto; }
+    .trend-copy{ width:100%; max-height:none; overflow-y:visible; }
+    .trend-visual{ flex:0 0 auto; width:100%; padding:3vh 20px; }
+  }
+
+
+  .trend-editor-toggle{position:absolute;z-index:8;right:1vw;bottom:1.1vh;border:1px solid var(--ink);background:var(--paper);padding:.55rem .7rem;font:700 9px/1 'Inter',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:none;}
+  .trend-editor{position:absolute;z-index:9;right:1vw;bottom:4.5vh;width:245px;background:rgba(255,255,255,.97);border:1px solid var(--ink);padding:12px;display:none;gap:8px;}
+  .trend-editor.open{display:grid;}
+  .trend-editor label{display:grid;grid-template-columns:78px 1fr 34px;gap:6px;align-items:center;font:600 9px/1.2 'Inter',sans-serif;text-transform:uppercase;letter-spacing:.04em;}
+  .trend-editor input{width:100%;}
+  .trend-editor .v{text-align:right;font-variant-numeric:tabular-nums;}
+
+
+/* ==========================================================================
+   START A PROJECT — locked single-screen split layout
+   Same principle as the landing page: one 100vh screen, no document
+   scroll, a vertical hairline splitting two columns, and a matching
+   split-bar footer. The left column (intro + the questionnaire itself)
+   scrolls internally if a question's options don't fit; the right column
+   stays empty except for the two CTA panels pinned to its bottom.
+   ========================================================================== */
+
+.tw-split{
+  flex:1 1 auto; min-height:0;
+  display:grid;
+  grid-template-columns: var(--split) 1fr;
+}
+
+.tw-split__left{
+  display:flex; flex-direction:column; min-height:0;
+  border-right:1px solid var(--line);
+}
+
+.tw-split__intro{
+  flex:0 0 auto;
+  padding:3vh 2vw 2.4vh;
+  border-bottom:1px solid var(--line);
+}
+.tw-split__intro h1{
+  font-size:clamp(24px, 2.55vw, 40px); font-weight:800; line-height:1.1;
+  letter-spacing:-0.01em; max-width:22ch;
+}
+.tw-split__intro p{
+  margin-top:1.6vh;
+  font-size:clamp(12px, 0.92vw, 15px); line-height:1.5; color:var(--ink);
+}
+
+.tw-split__questions{
+  flex:1; min-height:0; overflow-y:auto;
+  padding:2.6vh 2vw 3vh;
+}
+
+.tw-split__right{
+  display:flex; flex-direction:column; min-height:0;
+}
+.tw-split__right-filler{ flex:1; }
+.tw-split__panel{
+  flex:0 0 auto;
+  background:var(--panel);
+  padding:3vh 2vw; display:flex; flex-direction:column;
+  align-items:center; text-align:center; gap:2vh;
+}
+.tw-split__panel-block{ display:flex; flex-direction:column; align-items:center; gap:1.2vh; max-width:36ch; }
+.tw-split__panel-block + .tw-split__panel-block{
+  border-top:1px solid var(--line); padding-top:2vh; width:100%;
+}
+/* Smaller email link and a grey (not black) booking button — specific to
+   this right-hand panel, so the actual form submit button stays as-is. */
+.tw-split__panel .dd-service__cta-link{ font-size:clamp(14px, 1.1vw, 17px); }
+#dd-tw-booking-link{
+  background:var(--grey); border-color:var(--grey);
+}
+#dd-tw-booking-link:hover{ background:var(--paper); color:var(--grey); }
+
+@media (max-width:760px){
+  html.dd-fixed .tw-split{ grid-template-columns:1fr; }
+  html.dd-fixed .tw-split__left{ border-right:none; }
+  html.dd-fixed .tw-split__intro{ padding:24px 20px 20px; }
+  html.dd-fixed .tw-split__intro h1{ font-size:28px; max-width:14ch; }
+  html.dd-fixed .tw-split__questions{ padding:24px 20px; }
+  html.dd-fixed .tw-split__panel{ padding:24px 20px; }
+}
+
+
+/* ==========================================================================
+   START A PROJECT — typed, one-question-at-a-time questionnaire
+   Layers on top of the plain .dd-form fields below (which stay fully
+   functional as the no-JS fallback — see the comment in the HTML).
+   ========================================================================== */
+
+.dd-tw{ position:relative; padding-top:1.6em; }
+.dd-tw [hidden]{ display:none !important; }
+
+.dd-tw__counter{
+  position:absolute; top:0; left:0;
+  font-family:'Courier New', monospace;
+  font-size:clamp(11px, 0.85vw, 14px);
+  color:var(--grey);
+}
+
+.dd-tw-step{ margin-bottom:2.6em; }
+.dd-tw-step:last-of-type{ margin-bottom:0; }
+
+.dd-tw-step__q{
+  font-size:clamp(16px, 1.5vw, 22px); font-weight:500; line-height:1.4;
+  letter-spacing:-0.005em; color:var(--ink);
+  max-width:46ch;
+}
+.dd-tw-step__optional{ color:var(--grey); font-weight:500; font-size:0.7em; text-transform:none; letter-spacing:0; }
+
+.dd-tw-note{
+  margin-top:0.6em; max-width:46ch;
+  font-size:clamp(11px, 0.85vw, 13px); font-weight:500; color:var(--grey); line-height:1.5;
+}
+
+/* Blinking cursor, appended after the question text while/just after typing. */
+.dd-tw-cursor{
+  display:inline-block; width:2px; height:0.95em; margin-left:2px;
+  background:var(--ink); vertical-align:text-bottom;
+  animation:dd-tw-blink 1s step-end infinite;
+}
+@keyframes dd-tw-blink{ 50%{ opacity:0; } }
+@media (prefers-reduced-motion: reduce){
+  .dd-tw-cursor{ animation:none; }
+}
+
+.dd-tw-step__field{
+  margin-top:1.1em; max-width:520px;
+  opacity:0; transform:translateY(6px); pointer-events:none;
+  transition:opacity 0.35s ease, transform 0.35s ease;
+}
+.dd-tw-step__field.is-visible{ opacity:1; transform:none; pointer-events:auto; }
+
+.dd-tw-input{ font-size:clamp(15px, 1.1vw, 18px); }
+@keyframes dd-tw-shake{
+  25%{ transform:translateX(-6px); }
+  75%{ transform:translateX(6px); }
+}
+.dd-tw-shake{ animation:dd-tw-shake 0.28s ease; border-bottom-color:#B33 !important; }
+
+.dd-tw-choices{ display:flex; flex-direction:column; border-top:1px solid var(--line); }
+.dd-tw-choice{
+  display:block; width:100%; text-align:left;
+  font-family:inherit; font-size:clamp(13px, 0.98vw, 15px); font-weight:600; color:var(--ink);
+  background:none; border:none; border-bottom:1px solid var(--line); border-radius:0;
+  padding:0.9em 0.2em; cursor:pointer;
+  transition:background 0.15s ease, padding-left 0.15s ease;
+}
+.dd-tw-choice:hover, .dd-tw-choice:focus-visible{ background:var(--panel); padding-left:0.6em; }
+.dd-tw-choice.is-selected{ background:var(--ink); color:var(--paper); }
+.dd-tw-choice--desc{ display:flex; flex-direction:column; gap:0.3em; }
+.dd-tw-choice__name{ font-weight:700; }
+.dd-tw-choice__desc{ font-weight:500; font-size:0.85em; color:var(--grey); }
+.dd-tw-choice.is-selected .dd-tw-choice__desc{ color:rgba(255,255,255,0.75); }
+.dd-tw-choice--cta .dd-tw-choice__name{
+  text-transform:uppercase; letter-spacing:0.03em; font-size:0.95em;
+}
+
+.dd-tw__controls{
+  display:flex; align-items:center; justify-content:space-between; margin-top:1.8em;
+}
+.dd-tw__right{ display:flex; align-items:center; gap:1.4em; }
+
+.dd-tw__skip{
+  font-family:inherit; font-size:clamp(10px, 0.8vw, 13px); font-weight:700;
+  letter-spacing:0.04em; text-transform:uppercase; color:var(--grey);
+  background:none; border:none; cursor:pointer; padding:0.3em 0;
+}
+.dd-tw__skip:hover{ color:var(--ink); }
+
+/* Round prev/next controls — a deliberate exception to the site's usual
+   sharp corners, matching the reference the client provided. */
+.dd-tw__back, .dd-tw__continue{
+  display:flex; align-items:center; justify-content:center;
+  width:36px; height:36px; flex:0 0 auto;
+  border-radius:50%; border:1px solid var(--line);
+  background:var(--paper); color:var(--ink);
+  padding:0; cursor:pointer;
+  transition:border-color 0.2s ease, background 0.2s ease;
+}
+.dd-tw__back svg, .dd-tw__continue svg{ width:13px; height:13px; fill:currentColor; }
+.dd-tw__back:hover, .dd-tw__continue:hover{ border-color:var(--ink); background:var(--panel); }
+.dd-tw__continue:disabled{ opacity:0.35; cursor:default; }
+.dd-tw__continue:disabled:hover{ border-color:var(--line); background:var(--paper); }
+
+/* Once the enhanced JS flow is running, the plain always-visible submit
+   row is only shown again at the very end ("Ready?"). */
+.dd-tw-enhanced #dd-tw-submit-row{ display:none; }
+.dd-tw-enhanced #dd-tw-submit-row.is-visible{ display:flex; }
+
+@media (max-width:760px){
+  .dd-tw__controls{ flex-wrap:wrap; }
+}
+

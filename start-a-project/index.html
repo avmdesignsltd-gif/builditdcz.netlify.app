@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en" class="dd-fixed">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Start a Menswear Project | Design Directive</title>
+<meta name="description" content="Tell Design Directive about your menswear project, from strategy and design to product development, sourcing, production and commercial support." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://designdirective.studio/start-a-project/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Start a Menswear Project | Design Directive" />
+<meta property="og:description" content="Tell Design Directive about your menswear project, from strategy and design to product development, sourcing, production and commercial support." />
+<meta property="og:url" content="https://designdirective.studio/start-a-project/" />
+<meta property="og:site_name" content="Design Directive" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Start a Menswear Project | Design Directive" />
+<meta name="twitter:description" content="Tell Design Directive about your menswear project, from strategy and design to product development, sourcing, production and commercial support." />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="dd-root">
+  <!-- Custom cursor (fixed position, sits outside the grid flow).
+       Hidden by default; main.js only reveals it on fine-pointer
+       devices by putting .dd-cursor-on on <html>. -->
+  <div class="dd-cursor" id="dd-cursor" aria-hidden="true">
+    <div class="dd-cursor__ring">
+      <span class="dd-cursor__shape"></span>
+    </div>
+    <div class="dd-cursor__dot"></div>
+  </div>
+
+  <div class="page">
+
+    <div class="eyebrow-bar">
+      <span></span>
+      <span>London — International</span>
+    </div>
+
+    <header class="dd-project__nav">
+      <a href="/" class="dd-logo">DESIGN&nbsp;DIRECTIVE</a>
+    </header>
+
+    <div class="tw-split">
+      <div class="tw-split__left">
+
+        <!-- INTRO — typed out on load by main.js. Real static text stays here
+             as the no-JS fallback (and for SEO/crawlers); JS clears and
+             re-types it only once it confirms it's actually running. -->
+        <div class="tw-split__intro dd-fade" data-fade>
+          <h1 id="dd-tw-heading">Tell us where you are and what needs to happen next.</h1>
+          <p id="dd-tw-subnote">You don't need to know exactly which service you need. Start with the project, product or problem.</p>
+        </div>
+
+        <!-- QUESTIONNAIRE
+             Netlify Forms: every field below — including every branch-only
+             field — is present in this static HTML, so Netlify's build-time
+             crawler registers the complete schema regardless of which branch
+             a given visitor takes. main.js progressively enhances this into a
+             one-question-at-a-time, typed interview; with JS disabled this is
+             simply a normal, fully working, fully accessible form — nothing
+             is hidden by default except the parts that only make sense once
+             the enhanced version is running (see main.js). This column
+             scrolls internally (rather than the whole page) if a question's
+             options don't fit the available height. -->
+        <div class="tw-split__questions">
+          <form
+        name="project-enquiry"
+        method="POST"
+        action="/start-a-project/thank-you"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        class="dd-form"
+        id="dd-project-form"
+        data-track="project-enquiry"
+      >
+        <input type="hidden" name="form-name" value="project-enquiry" />
+        <p class="dd-form__honeypot">
+          <label>Leave this field blank
+            <input name="bot-field" tabindex="-1" autocomplete="off" />
+          </label>
+        </p>
+
+        <div class="dd-tw" id="dd-tw">
+          <span class="dd-tw__counter" id="dd-tw-counter" aria-hidden="true"></span>
+
+          <div class="dd-tw-step" data-step="name" data-required="true">
+            <p class="dd-tw-step__q">What's your name? <span class="dd-form__required" aria-hidden="true">*</span></p>
+            <div class="dd-tw-step__field">
+              <input class="dd-form__input dd-tw-input" type="text" name="name" id="f-name" autocomplete="name" required />
+            </div>
+          </div>
+
+          <div class="dd-tw-step" data-step="email" data-required="true">
+            <p class="dd-tw-step__q">What's your email? <span class="dd-form__required" aria-hidden="true">*</span></p>
+            <div class="dd-tw-step__field">
+              <input class="dd-form__input dd-tw-input" type="email" name="email" id="f-email" autocomplete="email" required />
+            </div>
+          </div>
+
+          <div class="dd-tw-step" data-step="brand">
+            <p class="dd-tw-step__q">What's the name of your brand or company? <span class="dd-tw-step__optional">(optional)</span></p>
+            <div class="dd-tw-step__field">
+              <input class="dd-form__input dd-tw-input" type="text" name="brand" id="f-brand" autocomplete="organization" />
+            </div>
+          </div>
+
+          <div class="dd-tw-step" data-step="website">
+            <p class="dd-tw-step__q">Website or Instagram? <span class="dd-tw-step__optional">(optional)</span></p>
+            <div class="dd-tw-step__field">
+              <input class="dd-form__input dd-tw-input" type="text" name="website" id="f-website" placeholder="e.g. designdirective.studio or @yourbrand" />
+            </div>
+          </div>
+
+          <div class="dd-tw-step" data-step="stage" data-required="true" data-type="choice">
+            <p class="dd-tw-step__q">Where are you in the process?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="stage" id="f-stage" required>
+                <option value="">Select one</option>
+                <option value="I have an idea">I have an idea</option>
+                <option value="I'm building a first collection">I'm building a first collection</option>
+                <option value="I have samples / product in development">I have samples / product in development</option>
+                <option value="I'm preparing to launch">I'm preparing to launch</option>
+                <option value="I have an existing brand">I have an existing brand</option>
+                <option value="I'm an established business">I'm an established business</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="I have an idea">I have an idea</button>
+                <button type="button" class="dd-tw-choice" data-value="I'm building a first collection">I'm building a first collection</button>
+                <button type="button" class="dd-tw-choice" data-value="I have samples / product in development">I have samples / product in development</button>
+                <button type="button" class="dd-tw-choice" data-value="I'm preparing to launch">I'm preparing to launch</button>
+                <button type="button" class="dd-tw-choice" data-value="I have an existing brand">I have an existing brand</button>
+                <button type="button" class="dd-tw-choice" data-value="I'm an established business">I'm an established business</button>
+                <button type="button" class="dd-tw-choice" data-value="Other">Other</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dd-tw-step" data-step="engagement" data-required="true" data-type="choice">
+            <p class="dd-tw-step__q">How would you like to work together?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="engagement" id="f-engagement" required>
+                <option value="">Select one</option>
+                <option value="Advisory & Consultancy">Advisory &amp; Consultancy — Focused expert input, from a single session to regular advice.</option>
+                <option value="Day / In-house Support">Day / In-house Support — Hands-on support remotely or with your team.</option>
+                <option value="Specific Task / Deliverable">Specific Task / Deliverable — A defined piece of work, from a technical pack to a complete range plan.</option>
+                <option value="Ongoing Support">Ongoing Support — Regular creative, design, development or commercial support.</option>
+                <option value="Full Project / Collection">Full Project / Collection — End-to-end support from strategy and concept through development and launch.</option>
+                <option value="Not sure yet — help me work it out">Not sure yet — help me work it out</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc" data-value="Advisory & Consultancy">
+                  <span class="dd-tw-choice__name">Advisory &amp; Consultancy</span>
+                  <span class="dd-tw-choice__desc">Focused expert input, from a single session to regular advice.</span>
+                </button>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc" data-value="Day / In-house Support">
+                  <span class="dd-tw-choice__name">Day / In-house Support</span>
+                  <span class="dd-tw-choice__desc">Hands-on support remotely or with your team.</span>
+                </button>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc" data-value="Specific Task / Deliverable">
+                  <span class="dd-tw-choice__name">Specific Task / Deliverable</span>
+                  <span class="dd-tw-choice__desc">A defined piece of work, from a technical pack to a complete range plan.</span>
+                </button>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc" data-value="Ongoing Support">
+                  <span class="dd-tw-choice__name">Ongoing Support</span>
+                  <span class="dd-tw-choice__desc">Regular creative, design, development or commercial support.</span>
+                </button>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc" data-value="Full Project / Collection">
+                  <span class="dd-tw-choice__name">Full Project / Collection</span>
+                  <span class="dd-tw-choice__desc">End-to-end support from strategy and concept through development and launch.</span>
+                </button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet — help me work it out">Not sure yet — help me work it out</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branch: Advisory & Consultancy -->
+          <div class="dd-tw-step" data-step="advisory_help" data-required="true" data-branch="Advisory & Consultancy">
+            <p class="dd-tw-step__q">What would you like advice or support with?</p>
+            <div class="dd-tw-step__field">
+              <textarea class="dd-form__textarea dd-tw-input" name="advisory_help" id="f-advisory-help" rows="5"></textarea>
+            </div>
+          </div>
+          <div class="dd-tw-step" data-step="advisory_support_level" data-required="true" data-type="choice" data-branch="Advisory & Consultancy">
+            <p class="dd-tw-step__q">How much support do you expect to need?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="advisory_support_level" id="f-advisory-support-level">
+                <option value="">Select one</option>
+                <option value="Single consultation">Single consultation</option>
+                <option value="1-2 hours">1–2 hours</option>
+                <option value="Half day">Half day</option>
+                <option value="Full day">Full day</option>
+                <option value="A few days">A few days</option>
+                <option value="Regular advisory support">Regular advisory support</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Single consultation">Single consultation</button>
+                <button type="button" class="dd-tw-choice" data-value="1-2 hours">1–2 hours</button>
+                <button type="button" class="dd-tw-choice" data-value="Half day">Half day</button>
+                <button type="button" class="dd-tw-choice" data-value="Full day">Full day</button>
+                <button type="button" class="dd-tw-choice" data-value="A few days">A few days</button>
+                <button type="button" class="dd-tw-choice" data-value="Regular advisory support">Regular advisory support</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+          <!-- Client's own budget indication only — not a published rate. -->
+          <div class="dd-tw-step" data-step="advisory_budget" data-type="choice" data-branch="Advisory & Consultancy">
+            <p class="dd-tw-step__q">Do you already have a budget in mind? <span class="dd-tw-step__optional">(optional)</span></p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="advisory_budget" id="f-advisory-budget">
+                <option value="">Select one</option>
+                <option value="Under £250">Under £250</option>
+                <option value="£250-£500">£250–£500</option>
+                <option value="£500-£1,000">£500–£1,000</option>
+                <option value="£1,000-£2,500">£1,000–£2,500</option>
+                <option value="£2,500+">£2,500+</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Under £250">Under £250</button>
+                <button type="button" class="dd-tw-choice" data-value="£250-£500">£250–£500</button>
+                <button type="button" class="dd-tw-choice" data-value="£500-£1,000">£500–£1,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£1,000-£2,500">£1,000–£2,500</button>
+                <button type="button" class="dd-tw-choice" data-value="£2,500+">£2,500+</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branch: Day / In-house Support -->
+          <div class="dd-tw-step" data-step="support_location" data-required="true" data-type="choice" data-branch="Day / In-house Support">
+            <p class="dd-tw-step__q">Where do you need the support?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="support_location" id="f-support-location">
+                <option value="">Select one</option>
+                <option value="Remote">Remote</option>
+                <option value="In-house">In-house</option>
+                <option value="Combination">Combination</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Remote">Remote</button>
+                <button type="button" class="dd-tw-choice" data-value="In-house">In-house</button>
+                <button type="button" class="dd-tw-choice" data-value="Combination">Combination</button>
+              </div>
+            </div>
+          </div>
+          <div class="dd-tw-step" data-step="support_time" data-required="true" data-type="choice" data-branch="Day / In-house Support">
+            <p class="dd-tw-step__q">How much time do you expect to need?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="support_time" id="f-support-time">
+                <option value="">Select one</option>
+                <option value="Half day">Half day</option>
+                <option value="1 day">1 day</option>
+                <option value="2-3 days">2–3 days</option>
+                <option value="1 week">1 week</option>
+                <option value="Longer / ongoing">Longer / ongoing</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Half day">Half day</button>
+                <button type="button" class="dd-tw-choice" data-value="1 day">1 day</button>
+                <button type="button" class="dd-tw-choice" data-value="2-3 days">2–3 days</button>
+                <button type="button" class="dd-tw-choice" data-value="1 week">1 week</button>
+                <button type="button" class="dd-tw-choice" data-value="Longer / ongoing">Longer / ongoing</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+          <!-- Client's own budget indication only — not a published day rate. -->
+          <div class="dd-tw-step" data-step="support_budget" data-type="choice" data-branch="Day / In-house Support">
+            <p class="dd-tw-step__q">Do you already have a budget in mind? <span class="dd-tw-step__optional">(optional)</span></p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="support_budget" id="f-support-budget">
+                <option value="">Select one</option>
+                <option value="Under £500">Under £500</option>
+                <option value="£500-£1,000">£500–£1,000</option>
+                <option value="£1,000-£2,500">£1,000–£2,500</option>
+                <option value="£2,500-£5,000">£2,500–£5,000</option>
+                <option value="£5,000+">£5,000+</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Under £500">Under £500</button>
+                <button type="button" class="dd-tw-choice" data-value="£500-£1,000">£500–£1,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£1,000-£2,500">£1,000–£2,500</button>
+                <button type="button" class="dd-tw-choice" data-value="£2,500-£5,000">£2,500–£5,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£5,000+">£5,000+</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branch: Specific Task / Deliverable -->
+          <div class="dd-tw-step" data-step="deliverable_type" data-required="true" data-type="choice" data-branch="Specific Task / Deliverable">
+            <p class="dd-tw-step__q">What would you like me to deliver?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="deliverable_type" id="f-deliverable-type">
+                <option value="">Select one</option>
+                <option value="Technical pack">Technical pack</option>
+                <option value="Technical drawings">Technical drawings</option>
+                <option value="Design development">Design development</option>
+                <option value="Range plan">Range plan</option>
+                <option value="Creative direction">Creative direction</option>
+                <option value="Sourcing & development">Sourcing &amp; development</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Technical pack">Technical pack</button>
+                <button type="button" class="dd-tw-choice" data-value="Technical drawings">Technical drawings</button>
+                <button type="button" class="dd-tw-choice" data-value="Design development">Design development</button>
+                <button type="button" class="dd-tw-choice" data-value="Range plan">Range plan</button>
+                <button type="button" class="dd-tw-choice" data-value="Creative direction">Creative direction</button>
+                <button type="button" class="dd-tw-choice" data-value="Sourcing & development">Sourcing &amp; development</button>
+                <button type="button" class="dd-tw-choice" data-value="Other">Other</button>
+              </div>
+            </div>
+          </div>
+          <div class="dd-tw-step" data-step="deliverable_details" data-required="true" data-branch="Specific Task / Deliverable">
+            <p class="dd-tw-step__q">Tell me a little more about what you need.</p>
+            <div class="dd-tw-step__field">
+              <textarea class="dd-form__textarea dd-tw-input" name="deliverable_details" id="f-deliverable-details" rows="5"></textarea>
+            </div>
+          </div>
+          <!-- A "specific task" can range from one small deliverable to a
+               substantial assignment (a complete range plan, say) — this
+               decides which budget range gets asked next. -->
+          <div class="dd-tw-step" data-step="deliverable_scale" data-required="true" data-type="choice" data-branch="Specific Task / Deliverable">
+            <p class="dd-tw-step__q">How would you describe the scale of the work?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="deliverable_scale" id="f-deliverable-scale">
+                <option value="">Select one</option>
+                <option value="One small / clearly defined task">One small / clearly defined task</option>
+                <option value="Several connected deliverables">Several connected deliverables</option>
+                <option value="Larger piece of project work">Larger piece of project work</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="One small / clearly defined task">One small / clearly defined task</button>
+                <button type="button" class="dd-tw-choice" data-value="Several connected deliverables">Several connected deliverables</button>
+                <button type="button" class="dd-tw-choice" data-value="Larger piece of project work">Larger piece of project work</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+          <!-- Only shown for "One small / clearly defined task". -->
+          <div class="dd-tw-step" data-step="deliverable_budget_small" data-type="choice" data-branch="Specific Task / Deliverable">
+            <p class="dd-tw-step__q">Do you already have a budget in mind? <span class="dd-tw-step__optional">(optional)</span></p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="deliverable_budget_small" id="f-deliverable-budget-small">
+                <option value="">Select one</option>
+                <option value="Under £250">Under £250</option>
+                <option value="£250-£500">£250–£500</option>
+                <option value="£500-£1,000">£500–£1,000</option>
+                <option value="£1,000-£2,500">£1,000–£2,500</option>
+                <option value="£2,500+">£2,500+</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Under £250">Under £250</button>
+                <button type="button" class="dd-tw-choice" data-value="£250-£500">£250–£500</button>
+                <button type="button" class="dd-tw-choice" data-value="£500-£1,000">£500–£1,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£1,000-£2,500">£1,000–£2,500</button>
+                <button type="button" class="dd-tw-choice" data-value="£2,500+">£2,500+</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+          <!-- Only shown for "Several connected deliverables" or "Larger
+               piece of project work" — the existing broader project range. -->
+          <div class="dd-tw-step" data-step="deliverable_budget" data-type="choice" data-branch="Specific Task / Deliverable">
+            <p class="dd-tw-step__q">Do you already have a budget in mind? <span class="dd-tw-step__optional">(optional)</span></p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="deliverable_budget" id="f-deliverable-budget">
+                <option value="">Select one</option>
+                <option value="Under £2,500">Under £2,500</option>
+                <option value="£2,500-£5,000">£2,500–£5,000</option>
+                <option value="£5,000-£10,000">£5,000–£10,000</option>
+                <option value="£10,000-£25,000">£10,000–£25,000</option>
+                <option value="£25,000-£50,000">£25,000–£50,000</option>
+                <option value="£50,000+">£50,000+</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Under £2,500">Under £2,500</button>
+                <button type="button" class="dd-tw-choice" data-value="£2,500-£5,000">£2,500–£5,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£5,000-£10,000">£5,000–£10,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£10,000-£25,000">£10,000–£25,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£25,000-£50,000">£25,000–£50,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£50,000+">£50,000+</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branch: Ongoing Support -->
+          <div class="dd-tw-step" data-step="ongoing_location" data-required="true" data-type="choice" data-branch="Ongoing Support">
+            <p class="dd-tw-step__q">How would we work together?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="ongoing_location" id="f-ongoing-location">
+                <option value="">Select one</option>
+                <option value="Remote">Remote</option>
+                <option value="In-house">In-house</option>
+                <option value="Combination">Combination</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Remote">Remote</button>
+                <button type="button" class="dd-tw-choice" data-value="In-house">In-house</button>
+                <button type="button" class="dd-tw-choice" data-value="Combination">Combination</button>
+              </div>
+            </div>
+          </div>
+          <div class="dd-tw-step" data-step="ongoing_investment" data-required="true" data-type="choice" data-branch="Ongoing Support">
+            <p class="dd-tw-step__q">What level of monthly investment are you considering?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="ongoing_investment" id="f-ongoing-investment">
+                <option value="">Select one</option>
+                <option value="Under £2,500">Under £2,500</option>
+                <option value="£2,500-£5,000">£2,500–£5,000</option>
+                <option value="£5,000-£8,000">£5,000–£8,000</option>
+                <option value="£8,000-£15,000">£8,000–£15,000</option>
+                <option value="£15,000+">£15,000+</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Under £2,500">Under £2,500</button>
+                <button type="button" class="dd-tw-choice" data-value="£2,500-£5,000">£2,500–£5,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£5,000-£8,000">£5,000–£8,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£8,000-£15,000">£8,000–£15,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£15,000+">£15,000+</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branch: Full Project / Collection -->
+          <div class="dd-tw-step" data-step="project_investment" data-required="true" data-type="choice" data-branch="Full Project / Collection">
+            <p class="dd-tw-step__q">What level of project investment are you considering?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="project_investment" id="f-project-investment">
+                <option value="">Select one</option>
+                <option value="Under £2,500">Under £2,500</option>
+                <option value="£2,500-£5,000">£2,500–£5,000</option>
+                <option value="£5,000-£10,000">£5,000–£10,000</option>
+                <option value="£10,000-£25,000">£10,000–£25,000</option>
+                <option value="£25,000-£50,000">£25,000–£50,000</option>
+                <option value="£50,000-£100,000">£50,000–£100,000</option>
+                <option value="£100,000-£150,000+">£100,000–£150,000+</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Under £2,500">Under £2,500</button>
+                <button type="button" class="dd-tw-choice" data-value="£2,500-£5,000">£2,500–£5,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£5,000-£10,000">£5,000–£10,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£10,000-£25,000">£10,000–£25,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£25,000-£50,000">£25,000–£50,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£50,000-£100,000">£50,000–£100,000</button>
+                <button type="button" class="dd-tw-choice" data-value="£100,000-£150,000+">£100,000–£150,000+</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branch: Not sure yet -->
+          <div class="dd-tw-step" data-step="unsure_details" data-required="true" data-branch="Not sure yet — help me work it out">
+            <p class="dd-tw-step__q">Tell me what you're working on and where you're stuck.</p>
+            <div class="dd-tw-step__field">
+              <textarea class="dd-form__textarea dd-tw-input" name="unsure_details" id="f-unsure-details" rows="5"></textarea>
+            </div>
+          </div>
+
+          <!-- Shared final questions, reached from every branch -->
+          <div class="dd-tw-step" data-step="timing" data-required="true" data-type="choice">
+            <p class="dd-tw-step__q">When would you like to start?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="timing" id="f-timing">
+                <option value="">Select one</option>
+                <option value="As soon as possible">As soon as possible</option>
+                <option value="Within 1-3 months">Within 1–3 months</option>
+                <option value="Within 3-6 months">Within 3–6 months</option>
+                <option value="6+ months">6+ months</option>
+                <option value="Not sure yet">Not sure yet</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="As soon as possible">As soon as possible</button>
+                <button type="button" class="dd-tw-choice" data-value="Within 1-3 months">Within 1–3 months</button>
+                <button type="button" class="dd-tw-choice" data-value="Within 3-6 months">Within 3–6 months</button>
+                <button type="button" class="dd-tw-choice" data-value="6+ months">6+ months</button>
+                <button type="button" class="dd-tw-choice" data-value="Not sure yet">Not sure yet</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dd-tw-step" data-step="notes">
+            <p class="dd-tw-step__q">Anything else I should know? <span class="dd-tw-step__optional">(optional)</span></p>
+            <div class="dd-tw-step__field">
+              <textarea class="dd-form__textarea dd-tw-input" name="notes" id="f-notes" rows="4"></textarea>
+            </div>
+          </div>
+
+          <!-- The first 15-minute intro is free; anything past that (the
+               30-minute Zoom, further calls, consultation time) is paid.
+               Picking "Send Project Enquiry" submits immediately; picking
+               either booking option submits in the background AND opens
+               the calendar link, so the enquiry always reaches Design
+               Directive regardless of which path someone takes. -->
+          <div class="dd-tw-step" data-step="continue_method" data-required="true" data-type="choice">
+            <p class="dd-tw-step__q">How would you like to continue?</p>
+            <p class="dd-tw-note">The first 15-minute introduction is complimentary. Further calls, Zoom meetings and consultation time are charged.</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="continue_method" id="f-continue-method">
+                <option value="">Select one</option>
+                <option value="Send Project Enquiry">Send Project Enquiry — Send everything you've told me and I'll respond by email.</option>
+                <option value="Book a Free 15-Minute Introduction">Book a Free 15-Minute Introduction — A short first conversation to understand the project and establish what support may be needed.</option>
+                <option value="Book a 30-Minute Zoom Consultation">Book a 30-Minute Zoom Consultation — A focused paid consultation to discuss the project, get professional input or work through specific questions.</option>
+                <option value="I'd like you to call me">I'd like you to call me — Request an introductory callback.</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc dd-tw-choice--cta" data-value="Send Project Enquiry">
+                  <span class="dd-tw-choice__name">Send Project Enquiry <span aria-hidden="true">↗</span></span>
+                  <span class="dd-tw-choice__desc">Send everything you've told me and I'll respond by email.</span>
+                </button>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc dd-tw-choice--cta" data-value="Book a Free 15-Minute Introduction">
+                  <span class="dd-tw-choice__name">Book a Free 15-Minute Introduction <span aria-hidden="true">↗</span></span>
+                  <span class="dd-tw-choice__desc">A short first conversation to understand the project and establish what support may be needed.</span>
+                </button>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc dd-tw-choice--cta" data-value="Book a 30-Minute Zoom Consultation">
+                  <span class="dd-tw-choice__name">Book a 30-Minute Zoom Consultation <span aria-hidden="true">↗</span></span>
+                  <span class="dd-tw-choice__desc">A focused paid consultation to discuss the project, get professional input or work through specific questions.</span>
+                </button>
+                <button type="button" class="dd-tw-choice dd-tw-choice--desc dd-tw-choice--cta" data-value="I'd like you to call me">
+                  <span class="dd-tw-choice__name">I'd Like You to Call Me <span aria-hidden="true">↗</span></span>
+                  <span class="dd-tw-choice__desc">Request an introductory callback.</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Only shown if "I'd like you to call me" is chosen above. -->
+          <div class="dd-tw-step" data-step="callback_phone" data-required="true" data-branch="I'd like you to call me">
+            <p class="dd-tw-step__q">What number should I call?</p>
+            <div class="dd-tw-step__field">
+              <input class="dd-form__input dd-tw-input" type="tel" name="phone" id="f-phone" autocomplete="tel" />
+            </div>
+          </div>
+          <div class="dd-tw-step" data-step="callback_time" data-required="true" data-type="choice" data-branch="I'd like you to call me">
+            <p class="dd-tw-step__q">When is the best time to reach you?</p>
+            <div class="dd-tw-step__field">
+              <select class="dd-form__select" name="callback_time" id="f-callback-time">
+                <option value="">Select one</option>
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+                <option value="No preference">No preference</option>
+              </select>
+              <div class="dd-tw-choices" hidden>
+                <button type="button" class="dd-tw-choice" data-value="Morning">Morning</button>
+                <button type="button" class="dd-tw-choice" data-value="Afternoon">Afternoon</button>
+                <button type="button" class="dd-tw-choice" data-value="Evening">Evening</button>
+                <button type="button" class="dd-tw-choice" data-value="No preference">No preference</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="dd-tw__controls" id="dd-tw-controls" hidden>
+            <button type="button" class="dd-tw__back" id="dd-tw-back" aria-label="Back">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="3" width="1.6" height="10"/><path d="M13 3 L13 13 L6 8 Z"/></svg>
+            </button>
+            <div class="dd-tw__right">
+              <button type="button" class="dd-tw__skip" id="dd-tw-skip" hidden>Skip this question</button>
+              <button type="button" class="dd-tw__continue" id="dd-tw-continue" aria-label="Continue">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 3 L4 13 L12 8 Z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- No-JS fallback only: with the enhanced flow running, the two
+             booking choices and "Send Project Enquiry" above submit (and,
+             where relevant, open the calendar link) directly — this plain
+             button is only ever seen without JavaScript. -->
+        <div class="dd-form__row dd-form__row--submit" id="dd-tw-submit-row">
+          <button type="submit" class="dd-form__submit">Send Project Enquiry <span aria-hidden="true">↗</span></button>
+        </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="tw-split__right">
+        <div class="tw-split__right-filler"></div>
+        <div class="tw-split__panel dd-fade" data-fade>
+          <!-- NOT SURE WHERE TO START — a parallel, always-available route
+               for people who aren't ready to answer a full brief. Swap
+               BOOKING_URL in main.js for the real calendar link once you
+               have one. -->
+          <div class="tw-split__panel-block">
+            <span class="dd-project__eyebrow">Not Sure Where to Start?</span>
+            <p class="dd-project__note">Book a free 15-minute introduction. Tell me what you're working on and we'll identify the right way to approach it.</p>
+            <a href="#" id="dd-tw-booking-link" target="_blank" rel="noopener" class="dd-form__submit" data-track="book-a-call">Book a Free 15-Minute Call <span aria-hidden="true">↗</span></a>
+          </div>
+
+          <!-- EMAIL FALLBACK -->
+          <div class="tw-split__panel-block">
+            <span class="dd-project__eyebrow">Prefer Email?</span>
+            <a href="mailto:avmdesignsltd@gmail.com" data-track="email-contact" class="dd-service__cta-link">avmdesignsltd@gmail.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="split-bar">
+      <span class="from">From Enquiry</span>
+      <span class="to">To Proposal</span>
+    </div>
+
+  </div>
+<script src="/main.js" defer></script>
+</body>
+</html>
