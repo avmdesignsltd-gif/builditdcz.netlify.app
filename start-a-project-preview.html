@@ -892,6 +892,73 @@ html.dd-cursor-down .dd-cursor__ring{ transform:scale(1.3); }
 }
 
 
+/* ==========================================================================
+   BOOKING MODAL — a calm, on-brand shell around whatever real scheduling
+   embed lives inside it. White background, black type, hairline border,
+   no colour, no border-radius — deliberately kept from ever looking like
+   the visitor has left the Design Directive site.
+   ========================================================================== */
+
+.dd-booking-modal{
+  position:fixed; inset:0; z-index:200;
+  display:flex; align-items:center; justify-content:center;
+  padding:4vh 2vw;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.2s ease;
+}
+.dd-booking-modal.is-open{ opacity:1; pointer-events:auto; }
+
+.dd-booking-modal__backdrop{
+  position:absolute; inset:0;
+  background:rgba(10,10,10,0.5);
+}
+
+.dd-booking-modal__panel{
+  position:relative;
+  background:var(--paper); border:1px solid var(--line);
+  width:min(560px, 100%); max-height:100%;
+  display:flex; flex-direction:column;
+  transform:translateY(10px);
+  transition:transform 0.2s ease;
+}
+.dd-booking-modal.is-open .dd-booking-modal__panel{ transform:translateY(0); }
+
+.dd-booking-modal__header{
+  flex:0 0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.4em 1.6em; border-bottom:1px solid var(--line);
+}
+.dd-booking-modal__title{
+  font-size:clamp(12px, 1vw, 14px); font-weight:700;
+  letter-spacing:.04em; text-transform:uppercase; color:var(--ink);
+}
+.dd-booking-modal__close{
+  font-family:inherit; font-size:22px; line-height:1; font-weight:400;
+  background:none; border:none; color:var(--ink); cursor:pointer;
+  padding:0 0.2em; transition:opacity 0.2s ease;
+}
+.dd-booking-modal__close:hover{ opacity:0.5; }
+
+.dd-booking-modal__body{
+  flex:1; min-height:0; overflow-y:auto;
+  padding:2.2em 1.6em;
+}
+.dd-booking-modal__body iframe{
+  width:100%; height:min(70vh, 640px); border:none; display:block;
+}
+
+.dd-booking-modal__notice{ max-width:38ch; }
+.dd-booking-modal__notice p{ font-size:0.92em; line-height:1.6; color:var(--ink); }
+.dd-booking-modal__notice p + p{ margin-top:1em; }
+.dd-booking-modal__notice a{ font-weight:700; border-bottom:1px solid var(--ink); }
+
+@media (max-width:760px){
+  .dd-booking-modal{ padding:0; }
+  .dd-booking-modal__panel{ width:100%; height:100%; max-height:none; }
+  .dd-booking-modal__body iframe{ height:100%; }
+}
+
+
 </style>
 </head>
 <body class="dd-root">
@@ -1473,7 +1540,7 @@ html.dd-cursor-down .dd-cursor__ring{ transform:scale(1.3); }
           <div class="tw-split__panel-block">
             <span class="dd-project__eyebrow">Not Sure Where to Start?</span>
             <p class="dd-project__note">Book a free 15-minute introduction. Tell me what you're working on and we'll identify the right way to approach it.</p>
-            <a href="#" id="dd-tw-booking-link" target="_blank" rel="noopener" class="dd-form__submit" data-track="book-a-call">Book a Free 15-Minute Call <span aria-hidden="true">↗</span></a>
+            <a href="#" id="dd-tw-booking-link" class="dd-form__submit" data-track="book-a-call">Book a Free 15-Minute Call <span aria-hidden="true">↗</span></a>
           </div>
 
           <!-- EMAIL FALLBACK -->
@@ -1488,6 +1555,25 @@ html.dd-cursor-down .dd-cursor__ring{ transform:scale(1.3); }
     <div class="split-bar">
       <span class="from">From Enquiry</span>
       <span class="to">To Proposal</span>
+    </div>
+
+    <!-- BOOKING MODAL — used by both "Book a Free 15-Minute Call" (top of
+         page) and the two booking choices inside the questionnaire's final
+         step. Real availability comes from whatever real scheduling
+         service (Cal.com, Calendly, Google Calendar Appointment
+         Scheduling…) the URLs at the top of main.js point to — this is
+         never a fake/decorative calendar. Until those URLs are set, it
+         shows a plain "not connected yet" message instead of a broken
+         embed. -->
+    <div class="dd-booking-modal" id="dd-booking-modal" aria-hidden="true">
+      <div class="dd-booking-modal__backdrop" id="dd-booking-modal-backdrop"></div>
+      <div class="dd-booking-modal__panel" role="dialog" aria-modal="true" aria-labelledby="dd-booking-modal-title">
+        <div class="dd-booking-modal__header">
+          <span class="dd-booking-modal__title" id="dd-booking-modal-title">Book a Free 15-Minute Introduction</span>
+          <button type="button" class="dd-booking-modal__close" id="dd-booking-modal-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="dd-booking-modal__body" id="dd-booking-modal-body"></div>
+      </div>
     </div>
 
   </div>
@@ -2088,10 +2174,74 @@ html.dd-cursor-down .dd-cursor__ring{ transform:scale(1.3); }
   if (!tw) return;
 
   // ---- swap these for the real calendar links when you have them ----
-  var FREE_INTRO_BOOKING_URL = "ADD-15-MINUTE-FREE-INTRO-LINK";
-  var PAID_ZOOM_BOOKING_URL = "ADD-30-MINUTE-PAID-ZOOM-LINK";
+  // Real scheduling integration only (Cal.com, Calendly, Google Calendar
+  // Appointment Scheduling, or a small backend tied to Google Calendar) —
+  // whichever URL goes here is embedded directly in the modal below, so
+  // it reads real, live availability. Nothing here fabricates open slots.
+  var FREE_INTRO_BOOKING_URL = "https://cal.com/angelo-van-mol-4zqwxb/15min";
+  var PAID_ZOOM_BOOKING_URL = "https://cal.com/angelo-van-mol-4zqwxb/30min";
+  var PLACEHOLDER_URLS = ["ADD-15-MINUTE-FREE-INTRO-LINK", "ADD-30-MINUTE-PAID-ZOOM-LINK", ""];
+
+  var bookingModal = document.getElementById('dd-booking-modal');
+  var bookingModalTitle = document.getElementById('dd-booking-modal-title');
+  var bookingModalBody = document.getElementById('dd-booking-modal-body');
+  var bookingModalClose = document.getElementById('dd-booking-modal-close');
+  var bookingModalBackdrop = document.getElementById('dd-booking-modal-backdrop');
+
+  function closeBookingModal(){
+    if (!bookingModal) return;
+    bookingModal.classList.remove('is-open');
+    bookingModal.setAttribute('aria-hidden', 'true');
+    // Clear the body so an embedded iframe actually stops (not just hidden).
+    setTimeout(function(){ if (bookingModalBody) bookingModalBody.innerHTML = ''; }, 200);
+  }
+
+  function openBookingModal(kind){
+    if (!bookingModal) return;
+    var isFree = kind === 'free';
+    var url = isFree ? FREE_INTRO_BOOKING_URL : PAID_ZOOM_BOOKING_URL;
+    if (bookingModalTitle){
+      bookingModalTitle.textContent = isFree
+        ? 'Book a Free 15-Minute Introduction'
+        : 'Book a 30-Minute Zoom Consultation';
+    }
+    if (bookingModalBody){
+      if (PLACEHOLDER_URLS.indexOf(url) !== -1){
+        // Not wired up to a real calendar yet — say so plainly rather
+        // than showing a broken or fake calendar.
+        bookingModalBody.innerHTML =
+          '<div class="dd-booking-modal__notice">' +
+            '<p>Online booking isn\'t connected yet — this will shortly open a live scheduler showing real availability, not a placeholder.</p>' +
+            '<p>In the meantime, email <a href="mailto:avmdesignsltd@gmail.com">avmdesignsltd@gmail.com</a> and we\'ll find a time directly.</p>' +
+          '</div>';
+      } else {
+        // A real scheduling URL (Cal.com, Calendly, Google Calendar
+        // Appointment Scheduling, etc.) — embed it inline so the visitor
+        // never leaves the page, and it reads genuine availability.
+        var iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.title = isFree ? 'Book a free 15-minute introduction' : 'Book a 30-minute Zoom consultation';
+        bookingModalBody.innerHTML = '';
+        bookingModalBody.appendChild(iframe);
+      }
+    }
+    bookingModal.classList.add('is-open');
+    bookingModal.setAttribute('aria-hidden', 'false');
+  }
+
+  if (bookingModalClose) bookingModalClose.addEventListener('click', closeBookingModal);
+  if (bookingModalBackdrop) bookingModalBackdrop.addEventListener('click', closeBookingModal);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && bookingModal && bookingModal.classList.contains('is-open')) closeBookingModal();
+  });
+
   var bookingLink = document.getElementById('dd-tw-booking-link');
-  if (bookingLink) bookingLink.href = FREE_INTRO_BOOKING_URL;
+  if (bookingLink){
+    bookingLink.addEventListener('click', function(e){
+      e.preventDefault();
+      openBookingModal('free');
+    });
+  }
 
   var form = document.getElementById('dd-project-form');
   var controls = document.getElementById('dd-tw-controls');
@@ -2280,9 +2430,18 @@ html.dd-cursor-down .dd-cursor__ring{ transform:scale(1.3); }
     if (form.requestSubmit) form.requestSubmit(); else form.submit();
   }
 
-  function openBookingAndSubmit(url){
-    window.open(url, '_blank', 'noopener');
-    doSubmit();
+  // Used when a booking modal is opening: the enquiry still needs to reach
+  // Design Directive, but a full-page navigation here would immediately
+  // kill the modal the visitor is trying to use. Netlify Forms accepts a
+  // plain background POST just as well as a native form submission — this
+  // just skips the page navigation that comes with the native one.
+  function doSubmitInBackground(){
+    var data = new URLSearchParams(new FormData(form)).toString();
+    fetch(form.action || window.location.pathname, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data
+    }).catch(function(){ /* Netlify Forms itself is the source of truth; a network hiccup here isn't worth surfacing to the visitor mid-booking. */ });
   }
 
   function allBranchValues(branchMap){
@@ -2323,8 +2482,8 @@ html.dd-cursor-down .dd-cursor__ring{ transform:scale(1.3); }
       if (id === 'continue_method'){
         var method = valueFor('continue_method');
         if (method === 'Send Project Enquiry'){ doSubmit(); return; }
-        if (method === 'Book a Free 15-Minute Introduction'){ openBookingAndSubmit(FREE_INTRO_BOOKING_URL); return; }
-        if (method === 'Book a 30-Minute Zoom Consultation'){ openBookingAndSubmit(PAID_ZOOM_BOOKING_URL); return; }
+        if (method === 'Book a Free 15-Minute Introduction'){ doSubmitInBackground(); openBookingModal('free'); return; }
+        if (method === 'Book a 30-Minute Zoom Consultation'){ doSubmitInBackground(); openBookingModal('paid'); return; }
       }
       return;
     }
