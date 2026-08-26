@@ -596,7 +596,7 @@
           <div class="tw-split__panel-block">
             <span class="dd-project__eyebrow">Not Sure Where to Start?</span>
             <p class="dd-project__note">Book a free 15-minute introduction. Tell me what you're working on and we'll identify the right way to approach it.</p>
-            <a href="#" id="dd-tw-booking-link" target="_blank" rel="noopener" class="dd-form__submit" data-track="book-a-call">Book a Free 15-Minute Call <span aria-hidden="true">↗</span></a>
+            <a href="#" id="dd-tw-booking-link" class="dd-form__submit" data-track="book-a-call">Book a Free 15-Minute Call <span aria-hidden="true">↗</span></a>
           </div>
 
           <!-- EMAIL FALLBACK -->
@@ -611,6 +611,25 @@
     <div class="split-bar">
       <span class="from">From Enquiry</span>
       <span class="to">To Proposal</span>
+    </div>
+
+    <!-- BOOKING MODAL — used by both "Book a Free 15-Minute Call" (top of
+         page) and the two booking choices inside the questionnaire's final
+         step. Real availability comes from whatever real scheduling
+         service (Cal.com, Calendly, Google Calendar Appointment
+         Scheduling…) the URLs at the top of main.js point to — this is
+         never a fake/decorative calendar. Until those URLs are set, it
+         shows a plain "not connected yet" message instead of a broken
+         embed. -->
+    <div class="dd-booking-modal" id="dd-booking-modal" aria-hidden="true">
+      <div class="dd-booking-modal__backdrop" id="dd-booking-modal-backdrop"></div>
+      <div class="dd-booking-modal__panel" role="dialog" aria-modal="true" aria-labelledby="dd-booking-modal-title">
+        <div class="dd-booking-modal__header">
+          <span class="dd-booking-modal__title" id="dd-booking-modal-title">Book a Free 15-Minute Introduction</span>
+          <button type="button" class="dd-booking-modal__close" id="dd-booking-modal-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="dd-booking-modal__body" id="dd-booking-modal-body"></div>
+      </div>
     </div>
 
   </div>

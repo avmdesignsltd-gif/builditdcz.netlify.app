@@ -594,10 +594,140 @@
   if (!tw) return;
 
   // ---- swap these for the real calendar links when you have them ----
-  var FREE_INTRO_BOOKING_URL = "ADD-15-MINUTE-FREE-INTRO-LINK";
-  var PAID_ZOOM_BOOKING_URL = "ADD-30-MINUTE-PAID-ZOOM-LINK";
+  // Real scheduling integration only (Cal.com, Calendly, Google Calendar
+  // Appointment Scheduling, or a small backend tied to Google Calendar) —
+  // whichever URL goes here is embedded directly in the modal below, so
+  // it reads real, live availability. Nothing here fabricates open slots.
+  var FREE_INTRO_BOOKING_URL = "https://cal.com/angelo-van-mol-4zqwxb/15min";
+  var PAID_ZOOM_BOOKING_URL = "https://cal.com/angelo-van-mol-4zqwxb/30min";
+  var PLACEHOLDER_URLS = ["ADD-15-MINUTE-FREE-INTRO-LINK", "ADD-30-MINUTE-PAID-ZOOM-LINK", ""];
+
+  var bookingModal = document.getElementById('dd-booking-modal');
+  var bookingModalTitle = document.getElementById('dd-booking-modal-title');
+  var bookingModalBody = document.getElementById('dd-booking-modal-body');
+  var bookingModalClose = document.getElementById('dd-booking-modal-close');
+  var bookingModalBackdrop = document.getElementById('dd-booking-modal-backdrop');
+
+  function closeBookingModal(){
+    if (!bookingModal) return;
+    bookingModal.classList.remove('is-open');
+    bookingModal.setAttribute('aria-hidden', 'true');
+    // Clear the body so an embedded iframe actually stops (not just hidden).
+    setTimeout(function(){ if (bookingModalBody) bookingModalBody.innerHTML = ''; }, 200);
+  }
+
+  // Cal.com specifically needs its own embed script rather than a plain
+  // iframe pointed at the page — a raw iframe of a cal.com booking page
+  // renders "page not found" because Cal.com expects to be initialised
+  // via this loader. This is Cal's own documented embed snippet.
+  var calEmbedReady = false;
+  function loadCalEmbed(onReady){
+    if (window.Cal && window.Cal.loaded){ onReady(); return; }
+    if (!calEmbedReady){
+      calEmbedReady = true;
+      (function (C, A, L) {
+        var p = function (a, ar) { a.q.push(ar); };
+        var d = C.document;
+        C.Cal = C.Cal || function () {
+          var cal = C.Cal; var ar = arguments;
+          if (!cal.loaded) {
+            cal.ns = {}; cal.q = cal.q || [];
+            d.head.appendChild(d.createElement('script')).src = A;
+            cal.loaded = true;
+          }
+          if (ar[0] === L) {
+            var api = function () { p(api, arguments); };
+            var namespace = ar[1];
+            api.q = api.q || [];
+            if (typeof namespace === 'string') {
+              cal.ns[namespace] = cal.ns[namespace] || api;
+              p(cal.ns[namespace], ar);
+              p(cal, ['initNamespace', namespace]);
+            } else p(cal, ar);
+            return;
+          }
+          p(cal, ar);
+        };
+      })(window, 'https://app.cal.com/embed/embed.js', 'init');
+      window.Cal('init', { origin: 'https://app.cal.com' });
+    }
+    var tries = 0;
+    var poll = setInterval(function(){
+      tries++;
+      if (window.Cal && window.Cal.loaded){ clearInterval(poll); onReady(); }
+      else if (tries > 100){ clearInterval(poll); }
+    }, 50);
+  }
+
+  function openBookingModal(kind){
+    if (!bookingModal) return;
+    var isFree = kind === 'free';
+    var url = isFree ? FREE_INTRO_BOOKING_URL : PAID_ZOOM_BOOKING_URL;
+    if (bookingModalTitle){
+      bookingModalTitle.textContent = isFree
+        ? 'Book a Free 15-Minute Introduction'
+        : 'Book a 30-Minute Zoom Consultation';
+    }
+    if (bookingModalBody){
+      if (PLACEHOLDER_URLS.indexOf(url) !== -1){
+        // Not wired up to a real calendar yet — say so plainly rather
+        // than showing a broken or fake calendar.
+        bookingModalBody.innerHTML =
+          '<div class="dd-booking-modal__notice">' +
+            '<p>Online booking isn\'t connected yet — this will shortly open a live scheduler showing real availability, not a placeholder.</p>' +
+            '<p>In the meantime, email <a href="mailto:avmdesignsltd@gmail.com">avmdesignsltd@gmail.com</a> and we\'ll find a time directly.</p>' +
+          '</div>';
+      } else {
+        bookingModalBody.innerHTML = '';
+        var container = document.createElement('div');
+        container.id = 'dd-cal-inline-' + kind + '-' + Date.now();
+        container.style.width = '100%';
+        container.style.minHeight = '560px';
+        bookingModalBody.appendChild(container);
+
+        var calMatch = url.match(/^https?:\/\/cal\.com\/(.+)$/i);
+        if (calMatch){
+          // Real Cal.com link — use their official embed API so it
+          // actually renders (see note above) and reads live availability.
+          var calLink = calMatch[1];
+          loadCalEmbed(function(){
+            window.Cal('inline', {
+              elementOrSelector: '#' + container.id,
+              calLink: calLink,
+              config: { theme: 'light' }
+            });
+          });
+        } else {
+          // Any other provider (Google Calendar Appointment Scheduling,
+          // Calendly, etc.) — these are built to be embedded via a plain
+          // iframe directly.
+          var iframe = document.createElement('iframe');
+          iframe.src = url;
+          iframe.style.width = '100%';
+          iframe.style.height = '560px';
+          iframe.style.border = 'none';
+          iframe.title = isFree ? 'Book a free 15-minute introduction' : 'Book a 30-minute Zoom consultation';
+          container.appendChild(iframe);
+        }
+      }
+    }
+    bookingModal.classList.add('is-open');
+    bookingModal.setAttribute('aria-hidden', 'false');
+  }
+
+  if (bookingModalClose) bookingModalClose.addEventListener('click', closeBookingModal);
+  if (bookingModalBackdrop) bookingModalBackdrop.addEventListener('click', closeBookingModal);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && bookingModal && bookingModal.classList.contains('is-open')) closeBookingModal();
+  });
+
   var bookingLink = document.getElementById('dd-tw-booking-link');
-  if (bookingLink) bookingLink.href = FREE_INTRO_BOOKING_URL;
+  if (bookingLink){
+    bookingLink.addEventListener('click', function(e){
+      e.preventDefault();
+      openBookingModal('free');
+    });
+  }
 
   var form = document.getElementById('dd-project-form');
   var controls = document.getElementById('dd-tw-controls');
@@ -786,9 +916,18 @@
     if (form.requestSubmit) form.requestSubmit(); else form.submit();
   }
 
-  function openBookingAndSubmit(url){
-    window.open(url, '_blank', 'noopener');
-    doSubmit();
+  // Used when a booking modal is opening: the enquiry still needs to reach
+  // Design Directive, but a full-page navigation here would immediately
+  // kill the modal the visitor is trying to use. Netlify Forms accepts a
+  // plain background POST just as well as a native form submission — this
+  // just skips the page navigation that comes with the native one.
+  function doSubmitInBackground(){
+    var data = new URLSearchParams(new FormData(form)).toString();
+    fetch(form.action || window.location.pathname, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data
+    }).catch(function(){ /* Netlify Forms itself is the source of truth; a network hiccup here isn't worth surfacing to the visitor mid-booking. */ });
   }
 
   function allBranchValues(branchMap){
@@ -829,8 +968,8 @@
       if (id === 'continue_method'){
         var method = valueFor('continue_method');
         if (method === 'Send Project Enquiry'){ doSubmit(); return; }
-        if (method === 'Book a Free 15-Minute Introduction'){ openBookingAndSubmit(FREE_INTRO_BOOKING_URL); return; }
-        if (method === 'Book a 30-Minute Zoom Consultation'){ openBookingAndSubmit(PAID_ZOOM_BOOKING_URL); return; }
+        if (method === 'Book a Free 15-Minute Introduction'){ doSubmitInBackground(); openBookingModal('free'); return; }
+        if (method === 'Book a 30-Minute Zoom Consultation'){ doSubmitInBackground(); openBookingModal('paid'); return; }
       }
       return;
     }
