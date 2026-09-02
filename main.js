@@ -120,8 +120,6 @@
   var trendHead = document.getElementById('trend-head');
   var trendBody = document.getElementById('trend-body');
   var trendTags = document.getElementById('trend-tags');
-  var trendEditorToggle = document.getElementById('trend-editor-toggle');
-  var trendEditor = document.getElementById('trend-editor');
   var introActive = false;
   var transition = 0; // 0 = text, 1 = image
   var transitionDistance = 720;
@@ -176,21 +174,38 @@
   // The list is rendered twice back-to-back so a simple CSS
   // translateY(-50%) animation loops forever.
   function buildTechSlider(){
-    // Spacing between garments is proportional to each one's own height
-    // (not a fixed px gap) — so a small vest and a long coat both get
-    // breathing room that feels the same relative to their own size,
-    // rather than a fixed gap looking cramped next to a big piece and
-    // oversized next to a small one.
-    var SPACING_RATIO = 0.4;
-    var DISPLAY_SCALE = 1.5;
-    var imgs = TECH_SPRITES.map(function(entry){
+    // Each garment's display height comes from the designer's own reference
+    // layout (a single-column stack where every piece is scaled to its
+    // intended real-world size relative to the others), not from the raw
+    // ink bounding box of this grid file. We tried using the grid file's
+    // own bounding boxes first, but that measures the drawn POSE as much
+    // as the actual garment -- a piece drawn with arms flared wide reads
+    // as huge, one drawn with arms hanging straight reads as small,
+    // regardless of true garment size -- which produced arbitrary-looking
+    // sizing. We also tried a single fixed height for every item, which
+    // was clean but lost the intentional size relationships entirely.
+    // TARGET_HEIGHTS restores those relationships, matched by hand against
+    // the reference file, in the same order as TECH_SPRITES below.
+    var TARGET_HEIGHTS = [135, 139, 117, 142, 121, 110, 144, 159, 125, 194, 116, 138, 183, 129, 177, 122, 191, 142, 208, 176, 191, 153, 134];
+    var SPACING = 60;
+    //
+    // Each garment is an inline <svg> with its own viewBox cropping a
+    // window into GARMENT_MASTER_SRC via <use>, rather than an <img> with
+    // a "#svgView(viewBox(...))" URL fragment. The img+fragment approach
+    // looked correct in isolation but silently breaks with multiple <img>
+    // tags pointing at the same file with different fragments -- the
+    // browser reuses one cached "natural size" across all of them instead
+    // of respecting each fragment's own crop, so most drawings rendered
+    // as the wrong region of the artwork (blank/cut-off). <use> against
+    // an external same-origin file doesn't have that problem.
+    var imgs = TECH_SPRITES.map(function(entry, i){
       var w = entry[0], h = entry[1], cropX = entry[2], cropY = entry[3];
-      var displayW = Math.round(w * DISPLAY_SCALE);
-      var displayH = Math.round(h * DISPLAY_SCALE);
-      var spacing = Math.round(displayH * SPACING_RATIO);
-      var fragment = '#svgView(viewBox(' + cropX + ',' + cropY + ',' + w + ',' + h + '))';
-      return '<div class="tw-tech-item" style="width:' + displayW + 'px; margin-bottom:' + spacing + 'px;">' +
-               '<img src="' + GARMENT_MASTER_SRC + fragment + '" alt="" width="' + displayW + '" height="' + displayH + '">' +
+      var displayH = TARGET_HEIGHTS[i];
+      var displayW = Math.round(w / h * displayH);
+      return '<div class="tw-tech-item" style="width:' + displayW + 'px; margin-bottom:' + SPACING + 'px;">' +
+               '<svg viewBox="' + cropX + ' ' + cropY + ' ' + w + ' ' + h + '" width="' + displayW + '" height="' + displayH + '">' +
+                 '<use href="' + GARMENT_MASTER_SRC + '#Layer_1"></use>' +
+               '</svg>' +
              '</div>';
     }).join('');
     return '<div class="tw-tech-slider"><div class="tw-tech-slider__track">' + imgs + imgs + '</div></div>';
@@ -434,7 +449,6 @@
     trendIntro.style.transform = ''; trendIntro.style.opacity = '';
     trendCopy.scrollTop = 0;
     track.style.transform = 'translateX(' + heroWidth() + 'px)';
-    trendEditorToggle.style.display = 'block';
     setTimeout(function(){ trendIntro.classList.remove('is-opening'); trendIntro.style.transform='translateX(0)'; trendIntro.style.opacity='1'; }, 650);
     measure();
   }
@@ -482,17 +496,6 @@
       window.location.reload();
     });
   }
-
-  trendEditorToggle.addEventListener('click', function(e){
-    e.stopPropagation(); trendEditor.classList.toggle('open');
-    trendEditorToggle.textContent = trendEditor.classList.contains('open') ? 'Close editor' : 'Edit text';
-  });
-  trendEditor.querySelectorAll('input[type=range]').forEach(function(input){
-    input.addEventListener('input', function(){
-      document.documentElement.style.setProperty(input.dataset.css, input.value + input.dataset.unit);
-      input.parentElement.querySelector('.v').textContent = input.value;
-    });
-  });
 
   var track = document.getElementById('cover-track');
   var img = imgA;
